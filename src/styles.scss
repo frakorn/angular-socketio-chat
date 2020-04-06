@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+// Variables
+$primary: rgba(23, 190, 187, 1);
+$secondary: rgba(240, 166, 202, 1);
+
+* {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+html,body {
+  background: linear-gradient(120deg, $primary, $secondary);
+  overflow: hidden;
+}
+
+
+// Placeholder Styling
+::-webkit-input-placeholder {
+   color: rgba(255, 255, 255, 0.9);
+}
+
+:-moz-placeholder {
+   color: rgba(255, 255, 255, 0.9);  
+}
+
+::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+:-ms-input-placeholder {  
+   color: rgba(255, 255, 255, 0.9);
+}
