@@ -13,7 +13,7 @@ import { ChatService } from './components/chat/chat.service';
   declarations: [
     AppComponent,
     UserPanelComponent,
-    ChatComponent
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
