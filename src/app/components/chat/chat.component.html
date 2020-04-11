@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <form>
-      <input type="text" placeholder="Enter your message">
-    </form>
+    <div class="form">
+      <input type="text" (keyup.enter)="sendMessage($event.target.value)"  placeholder="Enter your message">
+    </div>
   </div>

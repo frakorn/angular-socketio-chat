@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserPanelComponent } from './components/user-panel/user-panel.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ChatService } from './components/chat/chat.service';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { ChatComponent } from './components/chat/chat.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

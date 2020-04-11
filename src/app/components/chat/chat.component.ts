@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from './chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -9,7 +10,7 @@ export class ChatComponent implements OnInit {
 
   messages: { [key: string]: any }[];
 
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   ngOnInit() {
     this.messages = [{
@@ -22,6 +23,18 @@ export class ChatComponent implements OnInit {
       name: 'John Lydon',
       message: "There's nothing glorious in dying. Anyone can do it."
     }];
+  
+    this.chatService
+      .getMessages()
+      .subscribe((message: string) => {
+        console.log('message',message)
+      });
+
+
+  }
+
+  sendMessage(message) {
+    this.chatService.sendMessage(message);
   }
 
 }

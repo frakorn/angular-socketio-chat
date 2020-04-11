@@ -5,7 +5,8 @@ import { UserPanelComponent } from './components/user-panel/user-panel.component
 
 const routes: Routes =  [
   { path: 'user', component: UserPanelComponent },
-  { path: 'chat', component: ChatComponent }
+  { path: 'chat', component: ChatComponent },
+  { path: '', component: UserPanelComponent }
 ];
 
 @NgModule({
