@@ -1,5 +1,16 @@
-<p>
-  user-panel works!
-</p>
+<div class="container">
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
 
-<a href="/chat">chat</a>
+      <!-- Login Form -->
+      <div class="welcome-msg">
+        Choose your username
+      </div>
+      <form>
+        <input [(ngModel)] ="username" type="text" id="login" class="fadeIn second" name="login" placeholder="login">
+        <input (click)="setUsername()" type="submit" class="fadeIn fourth" value="Log In">
+      </form>
+
+    </div>
+  </div>

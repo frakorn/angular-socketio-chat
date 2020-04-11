@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '../chat/chat.service'
+import {Router} from "@angular/router"
 
 @Component({
   selector: 'app-user-panel',
@@ -7,7 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPanelComponent implements OnInit {
 
-  constructor() { }
+  username: string;
+
+  constructor(private chatService: ChatService,
+    private router: Router) { }
+
+  setUsername(){
+    this.chatService.setUsername(this.username);
+    this.router.navigate(['/chat'])
+  }
 
   ngOnInit() {
   }

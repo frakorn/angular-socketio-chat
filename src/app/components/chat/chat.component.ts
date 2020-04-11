@@ -9,32 +9,25 @@ import { ChatService } from './chat.service';
 export class ChatComponent implements OnInit {
 
   messages: { [key: string]: any }[];
+  message: string;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-    this.messages = [{
-      name: 'George Clooney',
-      message: "The only failure is not to try"
-    }, {
-      name: 'Seth Rogen',
-      message: "I grew up in Vancouver, man. That's where more than half of my style comes from."
-    }, {
-      name: 'John Lydon',
-      message: "There's nothing glorious in dying. Anyone can do it."
-    }];
-  
+    this.messages = [];
     this.chatService
       .getMessages()
       .subscribe((message: string) => {
         console.log('message',message)
+        this.messages.push({name:'Inic',message:message})
       });
 
 
   }
 
-  sendMessage(message) {
-    this.chatService.sendMessage(message);
+  sendMessage() {
+    this.chatService.sendMessage(this.message);
+    this.message = '';
   }
 
 }

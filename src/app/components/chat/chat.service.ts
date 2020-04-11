@@ -3,10 +3,19 @@ import { Observable } from 'rxjs/Observable';
 
 export class ChatService {
     private url = 'http://localhost:3000';
-    private socket;    
+    private socket;  
+    private username;  
 
     constructor() {
-        this.socket = io(this.url);
+        this.socket = io(this.url)
+    }
+
+    public setUsername(username){
+        this.username = username;
+    }
+
+    public getUsername(){
+        return this.username;
     }
 
     public sendMessage(message) {
