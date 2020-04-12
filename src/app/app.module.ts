@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { UserPanelComponent } from './components/user-panel/user-panel.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatService } from './components/chat/chat.service';
+import { ChatResolver } from './components/chat/chat.resolver';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -19,9 +21,12 @@ import { ChatService } from './components/chat/chat.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
-  providers: [ChatService],
+  providers: [
+    ChatService,
+    ChatResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
