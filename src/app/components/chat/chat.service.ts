@@ -2,7 +2,7 @@ import * as io from 'socket.io-client';
 import { Observable } from 'rxjs/Observable';
 
 export class ChatService {
-    private url = 'http://localhost:3000';
+    private url = 'http://192.168.1.111:3000';
     private socket;  
     private username;  
 

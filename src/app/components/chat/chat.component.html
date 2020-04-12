@@ -149,7 +149,7 @@
     <div class="content">
       <div class="messages">
         <ul *ngFor="let message of messages">
-          <li class="replies">
+          <li [ngClass]="(message.username==username)?'replies':'sent'">
             <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
             <p>{{message.message}}</p>
           </li>

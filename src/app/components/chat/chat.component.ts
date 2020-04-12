@@ -10,23 +10,24 @@ export class ChatComponent implements OnInit {
 
   messages: { [key: string]: any }[];
   message: string;
+  username: string;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
     this.messages = [];
+    this.username = this.chatService.getUsername();
     this.chatService
       .getMessages()
-      .subscribe((message: string) => {
+      .subscribe((message) => {
         console.log('message',message)
-        this.messages.push({name:'Inic',message:message})
+        this.messages.push(message)
       });
-
-
   }
 
   sendMessage() {
-    this.chatService.sendMessage(this.message);
+    const msg = {'username':this.username, 'message':this.message}
+    this.chatService.sendMessage(msg);
     this.message = '';
   }
 
