@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
-import { 
-  trigger, 
-  state, 
-  style, 
-  transition, 
-  animate
-} from '@angular/animations';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-chat',
@@ -19,7 +13,8 @@ import {
       })),
       transition('void <=> *', animate(1000)),
     ])
-    ] })
+  ]
+})
 export class ChatComponent implements OnInit {
 
   messages: { [key: string]: any }[];
@@ -34,13 +29,13 @@ export class ChatComponent implements OnInit {
     this.chatService
       .getMessages()
       .subscribe((message) => {
-        console.log('message',message)
+        console.log('message', message)
         this.messages.push(message)
       });
   }
 
   sendMessage() {
-    const msg = {'username':this.username, 'message':this.message}
+    const msg = { 'username': this.username, 'message': this.message }
     this.chatService.sendMessage(msg);
     this.message = '';
   }
