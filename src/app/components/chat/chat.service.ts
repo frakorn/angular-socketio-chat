@@ -1,6 +1,8 @@
 import * as io from 'socket.io-client';
 import { Observable } from 'rxjs/Observable';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class ChatService {
     private url = 'http://192.168.1.111:3000';
     private socket;  

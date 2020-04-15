@@ -10,6 +10,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { ChatService } from './components/chat/chat.service';
 import { ChatResolver } from './components/chat/chat.resolver';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FontAwesomeModule
   ],
   providers: [
     ChatService,
