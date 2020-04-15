@@ -17,21 +17,22 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class ChatComponent implements OnInit {
 
-  messages: { [key: string]: any }[];
+  messages = []
+  users = [];
   message: string;
   username: string;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-    this.messages = [];
     this.username = this.chatService.getUsername();
-    this.chatService
-      .getMessages()
-      .subscribe((message) => {
-        console.log('message', message)
-        this.messages.push(message)
-      });
+    this.chatService.getMessages().subscribe((message) => {
+      this.messages.push(message)
+    });
+    this.chatService.getUsers().subscribe((user) => {
+      this.users.push(user)
+    });
+    this.chatService.noticeNewUser(this.username);
   }
 
   sendMessage() {
@@ -39,5 +40,7 @@ export class ChatComponent implements OnInit {
     this.chatService.sendMessage(msg);
     this.message = '';
   }
+
+  // TODO: insert unsubscribe
 
 }

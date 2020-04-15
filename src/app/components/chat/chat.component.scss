@@ -5,6 +5,15 @@ $font_family_1: "proxima-nova", "Source Sans Pro", sans-serif;
 $background_color_1: #243140;
 $background_color_2: rgba(0, 0, 0, 0.3);
 
+.contact{
+	.wrap{
+		display:flex;
+	}
+	.fa-smile-o{
+		font-size:22px;
+	}
+}
+
 li.contact {
 	list-style-type: none;
 }
@@ -292,6 +301,7 @@ li.contact {
 						width: 88%;
 						margin: 0 auto;
 						position: relative;
+						display:flex;
 						span {
 							position: absolute;
 							left: 0;
@@ -318,7 +328,7 @@ li.contact {
 							margin-right: 10px;
 						}
 						.meta {
-							padding: 5px 0 0 0;
+							padding: 5px 0 0 5px;
 							.name {
 								font-weight: 600;
 							}

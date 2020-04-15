@@ -8,8 +8,12 @@ export class ChatService {
     private socket;  
     private username;  
 
-    constructor() {
+    constructor() { 
         this.socket = io(this.url)
+    }
+
+    public noticeNewUser(user){
+        this.socket.emit('new-user', user);
     }
 
     public setUsername(username){
@@ -25,10 +29,19 @@ export class ChatService {
     }
 
     public getMessages = () => {
+        debugger
         return Observable.create((observer) => {
             this.socket.on('new-message', (message) => {
                 observer.next(message);
             });
         });
     }
+
+    public getUsers = () => {
+        return Observable.create((observer) => {
+            this.socket.on('new-user', (user) => {
+                observer.next(user);
+            });
+        });
+    }    
 }
