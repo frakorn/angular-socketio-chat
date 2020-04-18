@@ -11,12 +11,13 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       state('void', style({
         opacity: 0
       })),
-      transition('void <=> *', animate(1000)),
+      transition(':enter', animate(1000)),
     ])
   ]
 })
 export class ChatComponent implements OnInit {
 
+  subscriptions = []
   messages = []
   users = [];
   message: string;
@@ -26,12 +27,13 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.chatService.getUsername();
-    this.chatService.getMessages().subscribe((message) => {
-      this.messages.push(message)
-    });
-    this.chatService.getUsers().subscribe((user) => {
-      this.users.push(user)
-    });
+    this.subscriptions.push(
+      this.chatService.getMessages().subscribe((message) => this.messages.push(message)),
+      this.chatService.getUsers().subscribe((user) => this.users.push(user)),
+      this.chatService.userLeave().subscribe((user) => {
+        this.users = this.users.filter(u => u.username !== user);
+      })
+    )
     this.chatService.noticeNewUser(this.username);
   }
 
@@ -41,6 +43,17 @@ export class ChatComponent implements OnInit {
     this.message = '';
   }
 
-  // TODO: insert unsubscribe
+  logout(){
+    this.chatService.logout();
+  }
+
+  setColor(username){
+    return this.users.find(u => u.username == username)['color'];
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
 
 }

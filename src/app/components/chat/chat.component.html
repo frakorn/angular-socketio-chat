@@ -8,18 +8,22 @@
               <span class="contact-status online"></span>
               <i class="fa fa-smile-o" aria-hidden="true"></i>
               <div class="meta">
-                <p class="name">{{user}}</p>
+                <span class="name">{{user.username}}</span>
               </div>
             </div>
           </li>
         </ul>
       </div>
+      <div id="bottom-bar">
+        <button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>
+        <button (click)="logout()" id="settings"><i class="fa fa-sign-out" aria-hidden="true"></i> <span>Logout</span></button>
+      </div>
     </div>
     <div class="content">
       <div class="messages">
         <ul *ngFor="let message of messages">
-          <li [ngClass]="(message.username==username)?'replies':'sent'">
-            <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+          <li [ngClass]="(message.username===username)?'sent':'replies'">
+            <p  [ngStyle]="{'background': message.username!==username? message.color : '#20CDF5'}" class="username">{{message.username.charAt(0) | uppercase}}</p>
             <p>{{message.message}}</p>
           </li>
         </ul>

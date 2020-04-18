@@ -10,15 +10,15 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   animations: [
     trigger(
       'fadeFromTop',
-      [
-        transition(
+      [transition(
           ':enter', [
-            style({ opacity:0,transform: 'translate3d(0, -100%, 0)' }),
+            style({ opacity: 0, transform: 'translate3d(0, -100%, 0)' }),
             animate('1s', style({ opacity: 1, transform: 'none' })),
           ]
-        )])]
+        )
+      ])
+    ]
 })
-
 
 export class UserPanelComponent implements OnInit {
 
@@ -29,10 +29,10 @@ export class UserPanelComponent implements OnInit {
 
   setUsername() {
     this.chatService.setUsername(this.username);
+    localStorage.setItem('username', this.username);
     this.router.navigate(['/chat'])
   }
 
   ngOnInit() {
   }
-
 }

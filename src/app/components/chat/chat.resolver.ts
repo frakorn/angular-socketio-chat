@@ -12,6 +12,8 @@ export class ChatResolver implements Resolve<any> {
     private router: Router ) { }
 
   resolve(){
+    if(localStorage.getItem('username'))
+      this.chatService.setUsername(localStorage.getItem('username'))
     if(!this.chatService.getUsername())
         this.router.navigate(['/user'])
   }
