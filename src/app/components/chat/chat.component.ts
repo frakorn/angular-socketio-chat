@@ -19,22 +19,26 @@ export class ChatComponent implements OnInit {
 
   subscriptions = []
   messages = []
-  users = [];
+  users = this.chatService.getUserList();
   message: string;
   username: string;
+  timerInterval: any;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
+    this.chatService.init();
     this.username = this.chatService.getUsername();
     this.subscriptions.push(
       this.chatService.getMessages().subscribe((message) => this.messages.push(message)),
-      this.chatService.getUsers().subscribe((user) => this.users.push(user)),
-      this.chatService.userLeave().subscribe((user) => {
-        this.users = this.users.filter(u => u.username !== user);
-      })
+      this.chatService.updateUsers().subscribe((userList) => this.users = userList)
     )
     this.chatService.noticeNewUser(this.username);
+    this.ping();
+  }
+
+  ping(){
+    this.timerInterval = setInterval(() => this.chatService.ping(),5000);
   }
 
   sendMessage() {
@@ -47,12 +51,9 @@ export class ChatComponent implements OnInit {
     this.chatService.logout();
   }
 
-  setColor(username){
-    return this.users.find(u => u.username == username)['color'];
-  }
-
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    clearInterval(this.timerInterval);
   }
 
 
