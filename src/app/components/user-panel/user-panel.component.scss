@@ -83,6 +83,10 @@
   
   
   /* FORM TYPOGRAPHY*/
+
+  input.error{
+    border: 2px solid red !important;
+  }
   
   input[type=button], input[type=submit], input[type=reset]  {
     background-color: #56baed;

@@ -8,7 +8,7 @@
         Choose your username
       </div>
       <form>
-        <input [(ngModel)] ="username" type="text" id="login" class="fadeIn second" name="login" placeholder="login">
+        <input [ngClass]="{'error':error}" [(ngModel)] ="username" type="text" id="login" class="fadeIn second" name="login" (focus)="focus()" placeholder="login">
         <input (click)="setUsername()" type="submit" class="fadeIn fourth" value="Log In">
       </form>
 

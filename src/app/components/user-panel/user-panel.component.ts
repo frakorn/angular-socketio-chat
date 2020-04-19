@@ -23,14 +23,24 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class UserPanelComponent implements OnInit {
 
   username: string;
+  error: boolean = false;
 
   constructor(private chatService: ChatService,
     private router: Router) { }
 
   setUsername() {
-    this.chatService.setUsername(this.username);
-    localStorage.setItem('username', this.username);
-    this.router.navigate(['/chat'])
+    if(this.username){
+      this.chatService.setUsername(this.username);
+      localStorage.setItem('username', this.username);
+      this.router.navigate(['/chat'])
+    }
+    else{
+      this.error = true;
+    }
+  }
+
+  focus(){
+    this.error = false;
   }
 
   ngOnInit() {
