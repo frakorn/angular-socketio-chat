@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from "@angular/core";
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class ChatService {
@@ -11,10 +12,15 @@ export class ChatService {
     private username;  
     private userList = [];
 
-    constructor(private router: Router) {}
+    constructor(private router: Router,
+        private toastr: ToastrService ) {}
 
     public init(){
         this.socket = io(this.url)
+        this.socket.on('username-error', (username) => {
+            this.toastr.error('Username already exist', '');
+            this.logout();
+        });
     }
 
     public setUserList(list){
@@ -57,17 +63,26 @@ export class ChatService {
 
     public updateUsers = () => {
         return Observable.create((observer) => {
-            this.socket.on('update-users', (userList) => {
-                this.userList = userList;
-                observer.next(userList);
+            this.socket.on('update-users', (userListObj) => {
+                console.log('update-users',userListObj.action, userListObj.username)
+                this.notifyChat(userListObj)
+                this.userList = userListObj.userList;
+                observer.next(this.userList);
             });
         });
     }  
 
+    private notifyChat(userListObj){
+        if(userListObj.action==='new-user')
+            this.toastr.success('New User', userListObj.username);
+        if(userListObj.action==='user-leave')
+            this.toastr.info('User Leave', userListObj.username);
+    }
+
     public logout(){
-        localStorage.setItem('username','');
-        this.username = '';
         this.socket.emit('user-leave', this.username);
+        this.username = '';
+        this.socket.disconnect();
         this.router.navigate(['/user'])
     }
 }

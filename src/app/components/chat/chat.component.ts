@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit {
   username: string;
   timerInterval: any;
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService ) { }
 
   ngOnInit() {
     this.chatService.init();

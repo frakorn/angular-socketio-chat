@@ -31,7 +31,6 @@ export class UserPanelComponent implements OnInit {
   setUsername() {
     if(this.username){
       this.chatService.setUsername(this.username);
-      localStorage.setItem('username', this.username);
       this.router.navigate(['/chat'])
     }
     else{

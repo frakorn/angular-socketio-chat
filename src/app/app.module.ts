@@ -11,7 +11,8 @@ import { ChatService } from './components/chat/chat.service';
 import { ChatResolver } from './components/chat/chat.resolver';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { ToastrModule } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -20,11 +21,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ChatComponent,
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ToastrModule.forRoot() // ToastrModule added
   ],
   providers: [
     ChatService,
