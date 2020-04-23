@@ -50,9 +50,11 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage() {
-    const msg = { 'username': this.username, 'message': this.message }
-    this.chatService.sendMessage(msg);
-    this.message = '';  
+    if(this.message){
+      const msg = { 'username': this.username, 'message': this.message }
+      this.chatService.sendMessage(msg);
+      this.message = '';  
+    }
   }
 
   logout(){
