@@ -30,7 +30,10 @@ export class ChatComponent implements OnInit {
     this.chatService.init();
     this.username = this.chatService.getUsername();
     this.subscriptions.push(
-      this.chatService.getMessages().subscribe((message) => this.messages.push(message)),
+      this.chatService.getMessages().subscribe((message) => {
+        this.messages.push(message)
+        this.scrollWindow();
+      }),
       this.chatService.updateUsers().subscribe((userList) => this.users = userList)
     )
     this.chatService.noticeNewUser(this.username);
@@ -41,10 +44,15 @@ export class ChatComponent implements OnInit {
     this.timerInterval = setInterval(() => this.chatService.ping(),5000);
   }
 
+  scrollWindow(){
+    const messagePanel = document.getElementById('message-panel');
+    setTimeout(()=> messagePanel.scrollTo(0,messagePanel.scrollHeight),100)
+  }
+
   sendMessage() {
     const msg = { 'username': this.username, 'message': this.message }
     this.chatService.sendMessage(msg);
-    this.message = '';
+    this.message = '';  
   }
 
   logout(){
