@@ -72,11 +72,13 @@ export class ChatService {
         });
     }  
 
-    private notifyChat(userListObj){
-        if(userListObj.action==='new-user')
-            this.toastr.success('New User', userListObj.username);
-        if(userListObj.action==='user-leave')
-            this.toastr.info('User Leave', userListObj.username);
+    private notifyChat(userListObj) {
+        if (userListObj.username !== this.username) {
+            if (userListObj.action === 'new-user')
+                this.toastr.success('New User', userListObj.username);
+            if (userListObj.action === 'user-leave')
+                this.toastr.info('User Leave', userListObj.username);
+        }
     }
 
     public logout(){

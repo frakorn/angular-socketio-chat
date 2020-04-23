@@ -1,4 +1,4 @@
-  
+ 
   a {
     color: #92badd;
     display:inline-block;
@@ -13,16 +13,6 @@
     justify-content: center;
   }
   
-  h2 {
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    display:inline-block;
-    margin: 40px 8px 10px 8px; 
-    color: #cccccc;
-  }
-  
   .container {
     height: calc(100vh - 75px);
     display: flex;
@@ -30,10 +20,7 @@
     flex-direction: column; 
     justify-content: center;
 }
-  
-  
-  /* STRUCTURE */
-  
+   
   .wrapper {
     display: flex;
     align-items: center;
@@ -57,32 +44,6 @@
     box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
     text-align: center;
   }
-  
-  #formFooter {
-    background-color: #f6f6f6;
-    border-top: 1px solid #dce8f1;
-    padding: 25px;
-    text-align: center;
-    -webkit-border-radius: 0 0 10px 10px;
-    border-radius: 0 0 10px 10px;
-  }
-  
-  
-  
-  /* TABS */
-  
-  h2.inactive {
-    color: #cccccc;
-  }
-  
-  h2.active {
-    color: #0d0d0d;
-    border-bottom: 2px solid #5fbae9;
-  }
-  
-  
-  
-  /* FORM TYPOGRAPHY*/
 
   input.error{
     border: 2px solid red !important;
@@ -155,8 +116,4 @@
   *:focus {
       outline: none;
   } 
-  
-  #icon {
-    width:60%;
-  }
   
