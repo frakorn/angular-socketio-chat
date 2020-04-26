@@ -13,12 +13,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToastrModule } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { DrawingsComponent } from './components/drawings/drawings.component';
+import { ColorSketchModule } from 'ngx-color/sketch';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserPanelComponent,
     ChatComponent,
+    DrawingsComponent,
   ],
   imports: [
     CommonModule,
@@ -27,6 +30,7 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     BrowserAnimationsModule,
     FontAwesomeModule,
+    ColorSketchModule,
     ToastrModule.forRoot() // ToastrModule added
   ],
   providers: [
