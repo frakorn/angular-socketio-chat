@@ -49,7 +49,11 @@ export class DrawingsComponent implements OnInit {
       this.chatService.updateDraw().subscribe((drawObj) => {
         if(drawObj.username!==this.chatService.getUsername() )
           this.loadCanvasFromJSON(drawObj.draw);
-      })
+      }),
+      this.chatService.createDraw().subscribe((drawObj) => {
+        if(drawObj.username!==this.chatService.getUsername() )
+          this.createDraw(drawObj);
+      }) 
     )
     this.toggleEnable = 'Enable'
     //setup front side canvas
@@ -61,7 +65,7 @@ export class DrawingsComponent implements OnInit {
     });
 
     this.canvas.on({
-      'object:added': (e) => {  },
+      'object:added': (e) => { this.addElement(e) },
       'object:removed': (e) => {  },
       'after:render': (e) => {  },
       'object:selected': (e) => {
@@ -105,6 +109,23 @@ export class DrawingsComponent implements OnInit {
 
     this.canvas.setWidth(this.size.width);
     this.canvas.setHeight(this.size.height);
+  }
+
+  addElement(e){
+    console.log('obj id',e.target.toObject().id)
+    this.chatService.notifyCreateDraw(e,e.target.get('type'))
+  }
+
+  createDraw(e){
+    let check = this.canvas.getObjects().find(o => o.toObject().id === e.draw.target.id)
+    if(!check){
+      let add = new fabric.Rect({
+        width: e.draw.target.width, height: e.draw.target.height, left: e.draw.target.left, top: e.draw.target.top, angle: e.draw.target.angle,
+        fill: e.draw.target.fill
+      });
+      this.extend(add, e.draw.target.id);
+      this.canvas.add(add);
+    }
   }
 
   //Block "Size"
@@ -233,6 +254,7 @@ export class DrawingsComponent implements OnInit {
   }
 
   extend(obj, id) {
+    obj.set('customData',{'id':id})
     obj.toObject = (function (toObject) {
       return function () {
         return fabric.util.object.extend(toObject.call(this), {
