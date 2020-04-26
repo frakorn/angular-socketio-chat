@@ -72,6 +72,16 @@ export class ChatService {
         });
     }  
 
+    public updateDraw = () => {
+        return Observable.create((observer) => {
+            this.socket.on('update-draw', (drawObj) => {
+                console.log('update-draw',drawObj.username)
+                if(drawObj.username!==this.username)
+                    observer.next(drawObj);
+            });
+        });
+    }  
+
     private notifyChat(userListObj) {
         if (userListObj.username !== this.username) {
             if (userListObj.action === 'new-user')
@@ -79,6 +89,10 @@ export class ChatService {
             if (userListObj.action === 'user-leave')
                 this.toastr.info('User Leave', userListObj.username);
         }
+    }
+
+    public broadcastDraw(draw){
+        this.socket.emit('update-draw', { 'username': this.username, 'draw': draw});
     }
 
     public logout(){

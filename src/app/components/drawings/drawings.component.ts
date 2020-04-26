@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ChatService } from '../chat/chat.service';
 import 'fabric';
 declare const fabric: any;
 
@@ -9,7 +9,9 @@ declare const fabric: any;
   styleUrls: ['./drawings.component.scss']
 })
 export class DrawingsComponent implements OnInit {
+  subscriptions = []
   private canvas: any;
+  toggleEnable: string;
   props: any = {
     canvasFill: '#ffffff',
     canvasImage: '',
@@ -40,35 +42,37 @@ export class DrawingsComponent implements OnInit {
   figureEditor: boolean = false;
   selected: any;
 
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-
+    this.subscriptions.push(
+      this.chatService.updateDraw().subscribe((drawObj) => {
+        if(drawObj.username!==this.chatService.getUsername() )
+          this.loadCanvasFromJSON(drawObj.draw);
+      })
+    )
+    this.toggleEnable = 'Enable'
     //setup front side canvas
     this.canvas = new fabric.Canvas('canvas', {
       hoverCursor: 'pointer',
       selection: true,
-      selectionBorderColor: 'blue'
+      selectionBorderColor: 'blue',
+      isDrawingMode: false
     });
 
     this.canvas.on({
-      'object:moving': (e) => { },
-      'object:modified': (e) => { },
+      'object:added': (e) => {  },
+      'object:removed': (e) => {  },
+      'after:render': (e) => {  },
       'object:selected': (e) => {
-
         let selectedObject = e.target;
         this.selected = selectedObject
         selectedObject.hasRotatingPoint = true;
         selectedObject.transparentCorners = false;
-        // selectedObject.cornerColor = 'rgba(255, 87, 34, 0.7)';
-
         this.resetPanels();
-
         if (selectedObject.type !== 'group' && selectedObject) {
-
           this.getId();
           this.getOpacity();
-
           switch (selectedObject.type) {
             case 'rect':
             case 'circle':
@@ -101,27 +105,15 @@ export class DrawingsComponent implements OnInit {
 
     this.canvas.setWidth(this.size.width);
     this.canvas.setHeight(this.size.height);
-
-    // get references to the html canvas element & its context
-    // this.canvas.on('mouse:down', (e) => {
-    // let canvasElement: any = document.getElementById('canvas');
-    // console.log(canvasElement)
-    // });
-
   }
 
-
-  /*------------------------Block elements------------------------*/
-
   //Block "Size"
-
   changeSize(event: any) {
     this.canvas.setWidth(this.size.width);
     this.canvas.setHeight(this.size.height);
   }
 
   //Block "Add text"
-
   addText() {
     let textString = this.textString;
     let text = new fabric.IText(textString, {
@@ -142,7 +134,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   //Block "Add images"
-
   getImgPolaroid(event: any) {
     let el = event.target;
     fabric.Image.fromURL(el.src, (image) => {
@@ -164,7 +155,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   //Block "Upload Image"
-
   addImageOnCanvas(url) {
     if (url) {
       fabric.Image.fromURL(url, (image) => {
@@ -185,22 +175,16 @@ export class DrawingsComponent implements OnInit {
     }
   }
 
-  readUrl(event) {
-    /*if (event.target.files && event.target.files[0]) {
-      var reader = new FileReader();
-      reader.onload = (event) => {
-        this.url = event.target['result'];
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    }*/
-  }
-
   removeWhite(url) {
     this.url = '';
   };
 
-  //Block "Add figure"
+  addFreeDraw() {
+    this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
+    this.toggleEnable = this.canvas.isDrawingMode ? 'Disable' : 'Enable'
+  }
 
+  //Block "Add figure"
   addFigure(figure) {
     let add: any;
     switch (figure) {
@@ -233,13 +217,11 @@ export class DrawingsComponent implements OnInit {
   }
 
   /*Canvas*/
-
   cleanSelect() {
     this.canvas.deactivateAllWithDispatch().renderAll();
   }
 
   selectItemAfterAdded(obj) {
-    //this.canvas.deactivateAllWithDispatch().renderAll();
     this.canvas.setActiveObject(obj);
   }
 
@@ -264,7 +246,6 @@ export class DrawingsComponent implements OnInit {
     let self = this;
     if (this.props.canvasImage) {
       this.canvas.setBackgroundColor({ source: this.props.canvasImage, repeat: 'repeat' }, function () {
-        // self.props.canvasFill = '';
         self.canvas.renderAll();
       });
     }
@@ -275,7 +256,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   /*------------------------Global actions for element------------------------*/
-
   getActiveStyle(styleName, object) {
     object = object || this.canvas.getActiveObject();
     if (!object) return '';
@@ -303,7 +283,6 @@ export class DrawingsComponent implements OnInit {
     object.setCoords();
     this.canvas.renderAll();
   }
-
 
   getActiveProp(name) {
     var object = this.canvas.getActiveObject();
@@ -376,9 +355,9 @@ export class DrawingsComponent implements OnInit {
     this.props.fill = this.getActiveStyle('fill', null);
   }
 
-  setFill($event ?) {
+  setFill($event?) {
     debugger
-    this.setActiveStyle('fill',$event.color.hex, null);
+    this.setActiveStyle('fill', $event.color.hex, null);
   }
 
   getLineHeight() {
@@ -423,7 +402,6 @@ export class DrawingsComponent implements OnInit {
     this.setActiveStyle('fontStyle', this.props.fontStyle ? 'italic' : '', null);
   }
 
-
   getTextDecoration() {
     this.props.TextDecoration = this.getActiveStyle('textDecoration', null);
   }
@@ -462,15 +440,12 @@ export class DrawingsComponent implements OnInit {
   }
 
   /*System*/
-
-
   removeSelected() {
     let activeObject = this.canvas.getActiveObject(),
       activeGroup = this.canvas.getActiveObjects();
 
     if (activeObject) {
       this.canvas.remove(activeObject);
-      // this.textString = '';
     }
     else if (activeGroup) {
       let objectsInGroup = activeGroup.getObjects();
@@ -488,7 +463,7 @@ export class DrawingsComponent implements OnInit {
 
     if (activeObject) {
       activeObject.bringToFront();
-       activeObject.opacity = 1;
+      activeObject.opacity = 1;
     }
     else if (activeGroup) {
       let objectsInGroup = activeGroup.getObjects();
@@ -505,7 +480,6 @@ export class DrawingsComponent implements OnInit {
 
     if (activeObject) {
       activeObject.sendToBack();
-      // activeObject.opacity = 1;
     }
     else if (activeGroup) {
       let objectsInGroup = activeGroup.getObjects();
@@ -528,7 +502,6 @@ export class DrawingsComponent implements OnInit {
     }
     else {
       console.log(this.canvas.toDataURL('png'))
-      //window.open(this.canvas.toDataURL('png'));
       var image = new Image();
       image.src = this.canvas.toDataURL('png')
       var w = window.open("");
@@ -538,41 +511,23 @@ export class DrawingsComponent implements OnInit {
 
   rasterizeSVG() {
     console.log(this.canvas.toSVG())
-    // window.open(
-    //   'data:image/svg+xml;utf8,' +
-    //   encodeURIComponent(this.canvas.toSVG()));
-    // console.log(this.canvas.toSVG())
-    // var image = new Image();
-    // image.src = this.canvas.toSVG()
     var w = window.open("");
     w.document.write(this.canvas.toSVG());
   };
 
+  broadcastDraw(){
+    this.chatService.broadcastDraw(JSON.stringify(this.canvas))
+  }
 
   saveCanvasToJSON() {
     let json = JSON.stringify(this.canvas);
     localStorage.setItem('Kanvas', json);
-    console.log('json');
-    console.log(json);
-
   }
 
-  loadCanvasFromJSON() {
-    let CANVAS = localStorage.getItem('Kanvas');
-    console.log('CANVAS');
-    console.log(CANVAS);
-
-    // and load everything from the same json
+  loadCanvasFromJSON(data?) {
+    let CANVAS = data || localStorage.getItem('Kanvas');
     this.canvas.loadFromJSON(CANVAS, () => {
-      console.log('CANVAS untar');
-      console.log(CANVAS);
-
-      // making sure to render canvas at the end
       this.canvas.renderAll();
-
-      // and checking if object's "name" is preserved
-      console.log('this.canvas.item(0).name');
-      console.log(this.canvas);
     });
 
   };
@@ -587,6 +542,8 @@ export class DrawingsComponent implements OnInit {
     this.figureEditor = false;
   }
 
-
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
 }

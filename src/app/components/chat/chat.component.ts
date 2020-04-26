@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -24,7 +25,8 @@ export class ChatComponent implements OnInit {
   username: string;
   timerInterval: any;
 
-  constructor(private chatService: ChatService ) { }
+  constructor(private chatService: ChatService, 
+    private router: Router ) { }
 
   ngOnInit() {
     this.chatService.init();
@@ -55,6 +57,10 @@ export class ChatComponent implements OnInit {
       this.chatService.sendMessage(msg);
       this.message = '';  
     }
+  }
+
+  gotoDraw(){
+    this.router.navigate(['/draw'])
   }
 
   logout(){

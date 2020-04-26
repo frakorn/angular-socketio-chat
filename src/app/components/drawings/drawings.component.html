@@ -6,17 +6,23 @@
         <div class="col-xl-12">
             <div class="row">
                 <div class="col-xl-12 text-right">
-                    <button data-toggle="tooltip" data-placement="bottom" title="Export to image" type="button" class="btn btn-primary" (click)="rasterize();">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Export to image" type="button" class="btn btn-primary"
+                        (click)="rasterize();">
                         <i class="fa fa-download" aria-hidden="true"></i> Export to image</button>
-                    <button data-toggle="tooltip" data-placement="bottom" title="Export to SVG" type="button" class="btn btn-primary" (click)="rasterizeSVG();">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Export to SVG" type="button" class="btn btn-primary"
+                        (click)="rasterizeSVG();">
                         <i class="fa fa-download" aria-hidden="true"></i> Export to SVG</button>
-                    <button data-toggle="tooltip" data-placement="bottom" title="Save in localStorage" type="button" class="btn btn-primary"
-                        (click)="saveCanvasToJSON();">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Broadcast drawing" type="button"
+                        class="btn btn-primary" (click)="broadcastDraw();">
+                        <i class="fa fa-save" aria-hidden="true"></i> Broadcast Draw</button>
+                    <button data-toggle="tooltip" data-placement="bottom" title="Save in localStorage" type="button"
+                        class="btn btn-primary" (click)="saveCanvasToJSON();">
                         <i class="fa fa-save" aria-hidden="true"></i> Save local</button>
-                    <button data-toggle="tooltip" data-placement="bottom" title="Load from localStorage" type="button" class="btn btn-primary"
-                        (click)="loadCanvasFromJSON();">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Load from localStorage" type="button"
+                        class="btn btn-primary" (click)="loadCanvasFromJSON();">
                         <i class="fa fa-save" aria-hidden="true"></i> Load local</button>
-                    <button data-toggle="tooltip" data-placement="bottom" title="Clean Canvas" type="button" class="btn btn-danger" (click)="confirmClear();">
+                    <button data-toggle="tooltip" data-placement="bottom" title="Clean Canvas" type="button" class="btn btn-danger"
+                        (click)="confirmClear();">
                         <i class="fa fa-ban" aria-hidden="true"></i> Clean</button>
                 </div>
             </div>
@@ -50,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="card">
                 <div class="card-header">Add text</div>
                 <div class="card-body">
@@ -58,7 +64,8 @@
                         <input type="text" class="form-control" [(ngModel)]="textString">
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text" class="btn btn-primary" (click)="addText()">
+                                <button id="add-text" data-toggle="tooltip" data-placement="bottom" title="Add text"
+                                    class="btn btn-primary" (click)="addText()">
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                 </button>
                             </span>
@@ -78,6 +85,15 @@
                     </div>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-header">Add Free Draw</div>
+                <div class="card-body text-center max-height">
+                    <div class="btn-group btn-group-vertical" role="group" aria-label="...">
+                        <button type="button" class="btn btn-primary" (click)="addFreeDraw()">{{toggleEnable}} Free
+                            Draw</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-xl-6">
             <canvas id="canvas"></canvas>
@@ -87,30 +103,30 @@
                 <div class="card-header">Options</div>
                 <div class="card-body text-center">
                     <div class="btn-group" role="group" aria-label="...">
-                        <button data-toggle="tooltip" data-placement="bottom" title="Delete element" type="button" class="btn btn-outline-danger" [disabled]="!selected"
-                            (click)="removeSelected();">
+                        <button data-toggle="tooltip" data-placement="bottom" title="Delete element" type="button"
+                            class="btn btn-outline-danger" [disabled]="!selected" (click)="removeSelected();">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
-                        <button data-toggle="tooltip" data-placement="bottom" title="Send to back" type="button" class="btn btn-outline-primary" [disabled]="!selected"
-                            (click)="sendToBack();">
+                        <button data-toggle="tooltip" data-placement="bottom" title="Send to back" type="button" class="btn btn-outline-primary"
+                            [disabled]="!selected" (click)="sendToBack();">
                             <i class="fa fa-level-down" aria-hidden="true"></i>
                         </button>
-                        <button data-toggle="tooltip" data-placement="bottom" title="Send to front" type="button" class="btn btn-outline-primary" [disabled]="!selected"
-                            (click)="bringToFront();">
+                        <button data-toggle="tooltip" data-placement="bottom" title="Send to front" type="button" class="btn btn-outline-primary"
+                            [disabled]="!selected" (click)="bringToFront();">
                             <i class="fa fa-level-up" aria-hidden="true"></i>
                         </button>
-                        <button data-toggle="tooltip" data-placement="bottom" title="Clone" type="button" class="btn btn-outline-primary" [disabled]="!selected || selected.type == 'group'"
-                            (click)="clone();">
+                        <button data-toggle="tooltip" data-placement="bottom" title="Clone" type="button" class="btn btn-outline-primary"
+                            [disabled]="!selected || selected.type == 'group'" (click)="clone();">
                             <i class="fa fa-clone" aria-hidden="true"></i>
                         </button>
-                        <button data-toggle="tooltip" data-placement="bottom" title="Unselect" type="button" class="btn btn-outline-primary" [disabled]="!selected"
-                            (click)="cleanSelect()">
+                        <button data-toggle="tooltip" data-placement="bottom" title="Unselect" type="button" class="btn btn-outline-primary"
+                            [disabled]="!selected" (click)="cleanSelect()">
                             <i class="fa fa-remove" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="card" *ngIf="!selected">
                 <div class="card-header">Canvas</div>
                 <div class="card-body">
@@ -119,19 +135,20 @@
                         <div class="custom-item-body">
                             <!--<input type="text" class="form-control" [cpPosition]="'bottom'" [(colorPicker)]="props.canvasFill" [style.background]="props.canvasFill"
                                 [value]="props.canvasFill" (colorPickerChange)="setCanvasFill()"> -->
-                                <color-sketch color="props.canvasFill" (onChangeComplete)="setCanvasFill($event)"></color-sketch>
+                            <color-sketch color="props.canvasFill" (onChangeComplete)="setCanvasFill($event)"></color-sketch>
 
                         </div>
                     </div>
                     <div class="custom-item">
                         <div class="custom-item-title">Background Image (url)</div>
                         <div class="custom-item-body">
-                            <input type="text" class="form-control" placeholder="http://example.jpg" [(ngModel)]="props.canvasImage" (keyup)="setCanvasImage()">
+                            <input type="text" class="form-control" placeholder="http://example.jpg" [(ngModel)]="props.canvasImage"
+                                (keyup)="setCanvasImage()">
                         </div>
                     </div>
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="card">
                 <div class="card-header">Custom</div>
                 <div class="card-body">
@@ -151,7 +168,7 @@
                     <div class="custom-item" *ngIf="selected && textEditor || selected && figureEditor">
                         <div class="custom-item-title">Fill</div>
                         <div class="custom-item-body">
-                                <color-sketch color="props.fill" (onChangeComplete)="setFill($event)"></color-sketch>
+                            <color-sketch color="props.fill" (onChangeComplete)="setFill($event)"></color-sketch>
                         </div>
                     </div>
                     <div class="custom-item" *ngIf="selected && textEditor">
@@ -182,16 +199,20 @@
                         <div class="custom-item-title">Text Align</div>
                         <div class="custom-item-body text-center">
                             <div class="btn-group" role="group" aria-label="...">
-                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'left' }" (click)="setTextAlign('left')">
+                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'left' }"
+                                    (click)="setTextAlign('left')">
                                     <i class="fa fa-align-left"></i>
                                 </button>
-                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'center' }" (click)="setTextAlign('center')">
+                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'center' }"
+                                    (click)="setTextAlign('center')">
                                     <i class="fa fa-align-center"></i>
                                 </button>
-                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'right' }" (click)="setTextAlign('right')">
+                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'right' }"
+                                    (click)="setTextAlign('right')">
                                     <i class="fa fa-align-right"></i>
                                 </button>
-                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'justify' }" (click)="setTextAlign('justify')">
+                                <button type="button" class="btn btn-primary" [ngClass]="{'active': props.textAlign == 'justify' }"
+                                    (click)="setTextAlign('justify')">
                                     <i class="fa fa-align-justify"></i>
                                 </button>
                             </div>
@@ -201,10 +222,12 @@
                         <div class="custom-item-title">Style</div>
                         <div class="custom-item-body text-center">
                             <div class="btn-group" role="group" aria-label="...">
-                                <button type="button" class="btn btn-primary btn-sm" [ngClass]="{'active': props.fontWeight }" (click)="setBold()">
+                                <button type="button" class="btn btn-primary btn-sm" [ngClass]="{'active': props.fontWeight }"
+                                    (click)="setBold()">
                                     <i class="fa fa-bold"></i>
                                 </button>
-                                <button type="button" class="btn btn-primary btn-sm" [ngClass]="{'active': props.fontStyle }" (click)="setFontStyle()">
+                                <button type="button" class="btn btn-primary btn-sm" [ngClass]="{'active': props.fontStyle }"
+                                    (click)="setFontStyle()">
                                     <i class="fa fa-italic"></i>
                                 </button>
                                 <button type="button" class="btn btn-primary btn-sm" [ngClass]="{'active': hasTextDecoration('underline') }"
@@ -225,17 +248,20 @@
                     <div class="custom-item" *ngIf="selected && textEditor">
                         <div class="custom-item-title">Font Size</div>
                         <div class="custom-item-body">
-                            <input type="range" [(ngModel)]="props.fontSize" (change)="setFontSize()" step="1" min="1" max="120">{{props.fontSize}}</div>
+                            <input type="range" [(ngModel)]="props.fontSize" (change)="setFontSize()" step="1" min="1"
+                                max="120">{{props.fontSize}}</div>
                     </div>
                     <div class="custom-item" *ngIf="selected && textEditor">
                         <div class="custom-item-title">Line Height</div>
                         <div class="custom-item-body">
-                            <input type="range" [(ngModel)]="props.lineHeight" (change)="setLineHeight()" step="0.1" min="0" max="10">{{props.lineHeight}}</div>
+                            <input type="range" [(ngModel)]="props.lineHeight" (change)="setLineHeight()" step="0.1"
+                                min="0" max="10">{{props.lineHeight}}</div>
                     </div>
                     <div class="custom-item" *ngIf="selected && textEditor">
                         <div class="custom-item-title">Char Spacing</div>
                         <div class="custom-item-body">
-                            <input type="range" [(ngModel)]="props.charSpacing" (change)="setCharSpacing()" step="10" min="-200" max="800">{{props.charSpacing}}</div>
+                            <input type="range" [(ngModel)]="props.charSpacing" (change)="setCharSpacing()" step="10"
+                                min="-200" max="800">{{props.charSpacing}}</div>
                     </div>
                 </div>
             </div>
@@ -243,7 +269,7 @@
     </div>
     <div class="row">
         <div class="col-xl-12">
-            <br/>
+            <br />
             <div class="card">
                 <div class="card-header">
                     <button type="button" class="btn btn-primary btn-sm" (click)="rasterizeJSON()">
