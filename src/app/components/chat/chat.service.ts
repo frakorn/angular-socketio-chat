@@ -85,18 +85,30 @@ export class ChatService {
     public createDraw = () => {
         return Observable.create((observer) => {
             this.socket.on('create-draw', (drawObj) => {
-                debugger
                 console.log('create-draw',drawObj.username)
                 if(drawObj.username!==this.username)
                     observer.next(drawObj);
             });
         });
-    }  
+    }
+    
+    public removeDraw = () => {
+        return Observable.create((observer) => {
+            this.socket.on('remove-draw', (drawObj) => {
+                console.log('remove-draw',drawObj)
+                if(drawObj.username!==this.username)
+                    observer.next(drawObj);
+            });
+        });
+    }      
     
     public notifyCreateDraw = (obj,type) => {
         this.socket.emit('create-draw', { 'username': this.username, 'draw': obj, 'type':type});
-   
-    }      
+    } 
+    
+    public notifyRemoveDraw = (obj) => {
+        this.socket.emit('remove-draw', { 'username': this.username, 'draw': obj});
+    }   
 
     public notifyUpdateDraw = (obj) => {
         this.socket.emit('update-draw', { 'username': this.username, 'draw': obj});

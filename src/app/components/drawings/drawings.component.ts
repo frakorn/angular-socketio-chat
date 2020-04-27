@@ -29,6 +29,7 @@ export class DrawingsComponent implements OnInit {
   };
 
   textString: string;
+  private username: string;
   url: string = '';
   size: any = {
     width: 500,
@@ -45,13 +46,15 @@ export class DrawingsComponent implements OnInit {
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
+    this.username = this.chatService.getUsername();
     this.subscriptions.push(
       this.chatService.updateDraw().subscribe((drawObj) => {
-        if(drawObj.username!==this.chatService.getUsername() )
           this.loadCanvasFromJSON(drawObj.draw);
       }),
+      this.chatService.removeDraw().subscribe((drawObj) => {
+          this.removeDraw(drawObj);
+      }),
       this.chatService.createDraw().subscribe((drawObj) => {
-        if(drawObj.username!==this.chatService.getUsername() )
           this.createDraw(drawObj);
       }) 
     )
@@ -112,20 +115,56 @@ export class DrawingsComponent implements OnInit {
   }
 
   addElement(e){
-    console.log('obj id',e.target.toObject().id)
     this.chatService.notifyCreateDraw(e,e.target.get('type'))
+  }
+
+  removeDraw(e){
+    this.chatService.notifyRemoveDraw(e)
   }
 
   createDraw(e){
     let check = this.canvas.getObjects().find(o => o.toObject().id === e.draw.target.id)
     if(!check){
-      let add = new fabric.Rect({
-        width: e.draw.target.width, height: e.draw.target.height, left: e.draw.target.left, top: e.draw.target.top, angle: e.draw.target.angle,
-        fill: e.draw.target.fill
-      });
+      let add = e.type === 'rect' ? this.createRect(e) : 
+      e.type === 'triangle' ? this.createTriangle(e) :
+      e.type === 'circle' ? this.createCircle(e) :
+      e.type === 'i-text' ? this.createText(e) : false;
       this.extend(add, e.draw.target.id);
       this.canvas.add(add);
     }
+  }
+
+  createRect(e){
+    return new fabric.Rect({
+      width: e.draw.target.width, height: e.draw.target.height, left: e.draw.target.left, top: e.draw.target.top, angle: e.draw.target.angle,
+      fill: e.draw.target.fill
+    });
+  }
+
+  createTriangle(e){
+    return new fabric.Triangle({
+      width: e.draw.target.width, height: e.draw.target.height, left: e.draw.target.left, top: e.draw.target.top, fill: e.draw.target.fill
+    });
+  }
+
+  createCircle(e){
+    return new fabric.Circle({
+      radius: e.draw.target.radius, left: e.draw.target.left, top: e.draw.target.top, fill: e.draw.target.fill
+    })
+  }
+
+  createText(e){
+    return new fabric.IText(e.draw.target.text, {
+      left: e.draw.target.left,
+      top: e.draw.target.top,
+      fontFamily: e.draw.target.fontFamily,
+      angle: e.draw.target.angle,
+      fill: e.draw.target.fill,
+      scaleX: e.draw.target.scaleX,
+      scaleY: e.draw.target.scaleY,
+      fontWeight: e.draw.target.fontWeight,
+      hasRotatingPoint: e.draw.target.hasRotatingPoint
+    });
   }
 
   //Block "Size"
@@ -254,7 +293,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   extend(obj, id) {
-    obj.set('customData',{'id':id})
     obj.toObject = (function (toObject) {
       return function () {
         return fabric.util.object.extend(toObject.call(this), {
@@ -378,7 +416,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   setFill($event?) {
-    debugger
     this.setActiveStyle('fill', $event.color.hex, null);
   }
 
@@ -468,6 +505,7 @@ export class DrawingsComponent implements OnInit {
 
     if (activeObject) {
       this.canvas.remove(activeObject);
+      this.chatService
     }
     else if (activeGroup) {
       let objectsInGroup = activeGroup.getObjects();
