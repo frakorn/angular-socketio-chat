@@ -68,7 +68,11 @@ export class DrawingsComponent implements OnInit {
     });
 
     this.canvas.on({
-      'object:added': (e) => { this.notifyCreateDraw(e) },
+      'object:added': (e) => {
+        let check = e.target.id ? true : false;
+        if (!check)
+          this.notifyCreateDraw(e)
+      },
       'object:modified': (e) => { this.notifyUpdateDraw(e) },
       'object:selected': (e) => {
         let selectedObject = e.target;
@@ -112,28 +116,31 @@ export class DrawingsComponent implements OnInit {
     this.canvas.setHeight(this.size.height);
   }
 
-  getObjectById(id){
+  getObjectById(id) {
     return this.canvas.getObjects().find(o => o.toObject().id === id)
   }
 
   notifyCreateDraw(e) {
-    this.chatService.notifyCreateDraw(e, e.target.get('type'))
+    let type = e.target.get('type')
+    if (type === "path")
+      this.extend(e.target, this.randomId());
+    this.chatService.notifyCreateDraw(e, type)
   }
 
   removeDraw(e) {
     this.chatService.notifyRemoveDraw(e)
   }
 
-  notifyUpdateDraw(e){
+  notifyUpdateDraw(e) {
     let obj = this.getObjectById(e.target.toObject().id)
     this.chatService.notifyUpdateDraw(obj);
   }
 
-  updateDraw(e){
+  updateDraw(e) {
     let obj = this.getObjectById(e.draw.id)
-    if(obj){
-      Object.assign(obj,e.draw)
-   this.canvas.renderAll();
+    if (obj) {
+      Object.assign(obj, e.draw)
+      this.canvas.renderAll();
     }
   }
 
@@ -143,43 +150,31 @@ export class DrawingsComponent implements OnInit {
       let add = e.type === 'rect' ? this.createRect(e) :
         e.type === 'triangle' ? this.createTriangle(e) :
           e.type === 'circle' ? this.createCircle(e) :
-            e.type === 'i-text' ? this.createText(e) : false;
+            e.type === 'i-text' ? this.createText(e) :
+              e.type === 'path' ? this.createPath(e) : false;
       this.extend(add, e.draw.target.id);
       this.canvas.add(add);
     }
   }
 
+  createPath(e) {
+    return new fabric.Path(e.draw.target.path, e.draw.target);
+  }
+
   createRect(e) {
-    return new fabric.Rect({
-      width: e.draw.target.width, height: e.draw.target.height, left: e.draw.target.left, top: e.draw.target.top, angle: e.draw.target.angle,
-      fill: e.draw.target.fill
-    });
+    return new fabric.Rect(e.draw.target);
   }
 
   createTriangle(e) {
-    return new fabric.Triangle({
-      width: e.draw.target.width, height: e.draw.target.height, left: e.draw.target.left, top: e.draw.target.top, fill: e.draw.target.fill
-    });
+    return new fabric.Triangle(e.draw.target);
   }
 
   createCircle(e) {
-    return new fabric.Circle({
-      radius: e.draw.target.radius, left: e.draw.target.left, top: e.draw.target.top, fill: e.draw.target.fill
-    })
+    return new fabric.Circle(e.draw.target);
   }
 
   createText(e) {
-    return new fabric.IText(e.draw.target.text, {
-      left: e.draw.target.left,
-      top: e.draw.target.top,
-      fontFamily: e.draw.target.fontFamily,
-      angle: e.draw.target.angle,
-      fill: e.draw.target.fill,
-      scaleX: e.draw.target.scaleX,
-      scaleY: e.draw.target.scaleY,
-      fontWeight: e.draw.target.fontWeight,
-      hasRotatingPoint: e.draw.target.hasRotatingPoint
-    });
+    return new fabric.IText(e.draw.target);
   }
 
   changeSize(event: any) {
@@ -486,7 +481,7 @@ export class DrawingsComponent implements OnInit {
 
     if (activeObject) {
       this.canvas.remove(activeObject);
-      if(!obj)
+      if (!obj)
         this.chatService.notifyRemoveDraw(activeObject)
     }
     else if (activeGroup) {
