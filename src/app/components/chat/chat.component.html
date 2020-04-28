@@ -8,7 +8,7 @@
               <span class="contact-status online"></span>
               <i class="fa fa-smile-o" aria-hidden="true"></i>
               <div class="meta">
-                <span class="name">{{user.username}}</span>
+                <span class="name" [ngClass]="{'me':user.username===username}">{{user.username}}</span>
               </div>
             </div>
           </li>
