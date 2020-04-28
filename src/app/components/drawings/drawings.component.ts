@@ -130,15 +130,9 @@ export class DrawingsComponent implements OnInit {
   }
 
   updateDraw(e){
-    let check = this.getObjectById(e.draw.id)
-    if(check){
-      check.set({ 
-        width: e.draw.width, 
-        height: e.draw.height,
-        strokeWidth: e.draw.strokeWidth,
-        left: e.draw.left,
-        top: e.draw.top
-    });
+    let obj = this.getObjectById(e.draw.id)
+    if(obj){
+      Object.assign(obj,e.draw)
    this.canvas.renderAll();
     }
   }
