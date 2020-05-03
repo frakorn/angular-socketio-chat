@@ -25,14 +25,15 @@ export class DrawingsComponent implements OnInit {
     fontStyle: null,
     textAlign: null,
     fontFamily: null,
-    TextDecoration: ''
+    TextDecoration: '',
+    menu:false
   };
 
   textString: string;
   private username: string;
   url: string = '';
   size: any = {
-    width: 500,
+    width: 1000,
     height: 800
   };
 
@@ -47,6 +48,7 @@ export class DrawingsComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.chatService.getUsername();
+    this.chatService.createDraw(this.createDraw,this)
     this.subscriptions.push(
       this.chatService.updateDraw().subscribe((drawObj) => {
         this.updateDraw(drawObj);
@@ -55,9 +57,6 @@ export class DrawingsComponent implements OnInit {
         let obj = this.getObjectById(drawObj.draw.id)
         this.removeSelected(obj);
       }),
-      this.chatService.createDraw().subscribe((drawObj) => {
-        this.createDraw(drawObj);
-      })
     )
     this.toggleEnable = 'Enable'
     this.canvas = new fabric.Canvas('canvas', {
@@ -116,6 +115,11 @@ export class DrawingsComponent implements OnInit {
     this.canvas.setHeight(this.size.height);
   }
 
+  toggleMenu(){
+    debugger
+    this.props.menu=!this.props.menu
+  }
+
   getObjectById(id) {
     return this.canvas.getObjects().find(o => o.toObject().id === id)
   }
@@ -144,16 +148,16 @@ export class DrawingsComponent implements OnInit {
     }
   }
 
-  createDraw(e) {
-    let check = this.getObjectById(e.draw.target.id)
+  createDraw(e,that) {
+    let check = that.getObjectById(e.draw.target.id)
     if (!check) {
-      let add = e.type === 'rect' ? this.createRect(e) :
-        e.type === 'triangle' ? this.createTriangle(e) :
-          e.type === 'circle' ? this.createCircle(e) :
-            e.type === 'i-text' ? this.createText(e) :
-              e.type === 'path' ? this.createPath(e) : false;
-      this.extend(add, e.draw.target.id);
-      this.canvas.add(add);
+      let add = e.type === 'rect' ? that.createRect(e) :
+        e.type === 'triangle' ? that.createTriangle(e) :
+          e.type === 'circle' ? that.createCircle(e) :
+            e.type === 'i-text' ? that.createText(e) :
+              e.type === 'path' ? that.createPath(e) : false;
+              that.extend(add, e.draw.target.id);
+              that.canvas.add(add);
     }
   }
 
@@ -174,7 +178,7 @@ export class DrawingsComponent implements OnInit {
   }
 
   createText(e) {
-    return new fabric.IText(e.draw.target);
+    return new fabric.IText(e.draw.target.text,e.draw.target);
   }
 
   changeSize(event: any) {
@@ -183,7 +187,7 @@ export class DrawingsComponent implements OnInit {
   }
 
   addText() {
-    let textString = this.textString;
+    let textString = 'Text';
     let text = new fabric.IText(textString, {
       left: 10,
       top: 10,

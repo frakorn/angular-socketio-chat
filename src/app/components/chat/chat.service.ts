@@ -40,7 +40,10 @@ export class ChatService {
     }
 
     public getUsername(){
-        return this.username;
+        if(!this.username)
+            this.router.navigate(['/user'])
+        else
+            return this.username;
     }
 
     public sendMessage(message) {
@@ -82,13 +85,11 @@ export class ChatService {
         });
     } 
     
-    public createDraw = () => {
-        return Observable.create((observer) => {
-            this.socket.on('create-draw', (drawObj) => {
-                console.log('create-draw',drawObj.username)
-                if(drawObj.username!==this.username)
-                    observer.next(drawObj);
-            });
+    public createDraw = (foo,that) => {
+        this.socket.on('create-draw', (drawObj) => {
+            console.log('create-draw',drawObj.username)
+            if(drawObj.username!==this.username)
+                foo(drawObj,that);
         });
     }
     
