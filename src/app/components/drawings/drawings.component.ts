@@ -13,6 +13,7 @@ export class DrawingsComponent implements OnInit {
   subscriptions = []
   private canvas: any;
   toggleEnable: string;
+  timerInterval: any;
   props: any = {
     canvasFill: '#ffffff',
     canvasImage: '',
@@ -115,6 +116,11 @@ export class DrawingsComponent implements OnInit {
     });
     this.canvas.setWidth(this.size.width);
     this.canvas.setHeight(this.size.height);
+    this.ping();
+  }
+
+  ping(){
+    this.timerInterval = setInterval(() => this.chatService.ping(),5000);
   }
 
   back(){
@@ -589,6 +595,7 @@ export class DrawingsComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    clearInterval(this.timerInterval);
   }
 
 }

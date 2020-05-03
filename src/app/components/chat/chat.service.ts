@@ -16,14 +16,16 @@ export class ChatService {
         private toastr: ToastrService ) {}
 
     public init(){
-        if(!this.socket || !this.socket.connected){
             this.socket = io(this.url)
             this.socket.on('username-error', (username) => {
                 this.toastr.error('Username already exist', '');
                 this.logout();
             });
             this.noticeNewUser(this.username);
-        }
+    }
+
+    public isConnected(){
+        return this.socket && this.socket.connected;
     }
 
     public setUserList(list){
@@ -140,7 +142,5 @@ export class ChatService {
 
     public disconnect(){
         this.socket.emit('user-leave', this.username);
-        this.socket.disconnect();
-
     }
 }

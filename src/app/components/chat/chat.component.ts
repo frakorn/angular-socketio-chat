@@ -29,15 +29,18 @@ export class ChatComponent implements OnInit {
     private router: Router ) { }
 
   ngOnInit() {
-    this.chatService.init();
-    this.username = this.chatService.getUsername();
+    if(!this.chatService.isConnected()){
+      this.chatService.init();
+      this.subscriptions.push(
+        this.chatService.updateUsers().subscribe((userList) => this.users = userList)
+      )
+    }
     this.subscriptions.push(
       this.chatService.getMessages().subscribe((message) => {
         this.messages.push(message)
         this.scrollWindow();
-      }),
-      this.chatService.updateUsers().subscribe((userList) => this.users = userList)
-    )
+      }))
+    this.username = this.chatService.getUsername();
     this.ping();
   }
 
@@ -69,7 +72,6 @@ export class ChatComponent implements OnInit {
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     clearInterval(this.timerInterval);
-    this.chatService.disconnect();
   }
 
 
