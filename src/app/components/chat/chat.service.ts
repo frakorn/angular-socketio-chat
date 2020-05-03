@@ -80,14 +80,13 @@ export class ChatService {
         });
     }  
 
-    public updateDraw = () => {
-        return Observable.create((observer) => {
+    public updateDraw = (foo,that) => {
             this.socket.on('update-draw', (drawObj) => {
                 console.log('update-draw',drawObj.username)
-                if(drawObj.username!==this.username)
-                    observer.next(drawObj);
+                if(drawObj.username!==this.username){
+                    that.updateDraw(drawObj);
+                }
             });
-        });
     } 
     
     public createDraw = (foo,that) => {
@@ -98,14 +97,14 @@ export class ChatService {
         });
     }
     
-    public removeDraw = () => {
-        return Observable.create((observer) => {
+    public removeDraw = (foo,that) => {
             this.socket.on('remove-draw', (drawObj) => {
                 console.log('remove-draw',drawObj)
-                if(drawObj.username!==this.username)
-                    observer.next(drawObj);
+                if(drawObj.username!==this.username){
+                    let obj = that.getObjectById(drawObj.draw.id);
+                    that.removeSelected(obj);
+                }
             });
-        });
     }      
     
     public notifyCreateDraw = (obj,type) => {

@@ -51,16 +51,9 @@ export class DrawingsComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.chatService.getUsername();
-    this.chatService.createDraw(this.createDraw,this)
-    this.subscriptions.push(
-      this.chatService.updateDraw().subscribe((drawObj) => {
-        this.updateDraw(drawObj);
-      }),
-      this.chatService.removeDraw().subscribe((drawObj) => {
-        let obj = this.getObjectById(drawObj.draw.id)
-        this.removeSelected(obj);
-      }),
-    )
+    this.chatService.createDraw(this.createDraw,this);
+    this.chatService.removeDraw(this.removeSelected,this);
+    this.chatService.updateDraw(this.updateDraw,this)
     this.toggleEnable = 'Enable'
     this.canvas = new fabric.Canvas('canvas', {
       hoverCursor: 'pointer',
@@ -594,7 +587,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     clearInterval(this.timerInterval);
   }
 
