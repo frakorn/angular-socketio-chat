@@ -9,7 +9,7 @@
                             <i class="fa fa-bars"></i>
                         </button>
                         <div [ngClass]="{'visible':props.menu}" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" (click)="back()">Back</a>
                             <a class="dropdown-item" href="#">Another action</a>
                             <a class="dropdown-item" href="#">Something else here</a>
                         </div>
@@ -54,7 +54,7 @@
                 <canvas id="canvas"></canvas>
             </div>
             <div class="right-panel">
-                <div *ngIf="!selected">
+                <!--<div *ngIf="!selected">
                     <div>
                         <div class="custom-item" *ngIf="!props.canvasImage">
                             <div class="custom-item-title">Background Color</div>
@@ -63,7 +63,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
+                <div  class="custom-item" *ngIf="selected && textEditor || selected && figureEditor">
+                        <!--<div class="custom-item-title">Background item colo</div>-->
+                        <div class="custom-item-body">
+                            <color-sketch color="props.fill" (onChangeComplete)="setFill($event)"></color-sketch>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

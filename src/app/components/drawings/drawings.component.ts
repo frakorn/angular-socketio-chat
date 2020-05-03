@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat/chat.service';
+import { Router } from '@angular/router';
 import 'fabric';
 declare const fabric: any;
 
@@ -44,7 +45,8 @@ export class DrawingsComponent implements OnInit {
   figureEditor: boolean = false;
   selected: any;
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService,
+    private router: Router) { }
 
   ngOnInit() {
     this.username = this.chatService.getUsername();
@@ -115,8 +117,11 @@ export class DrawingsComponent implements OnInit {
     this.canvas.setHeight(this.size.height);
   }
 
+  back(){
+    this.router.navigate(['/chat'])
+  }
+
   toggleMenu(){
-    debugger
     this.props.menu=!this.props.menu
   }
 

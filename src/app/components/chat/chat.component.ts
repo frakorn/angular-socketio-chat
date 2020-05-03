@@ -38,7 +38,6 @@ export class ChatComponent implements OnInit {
       }),
       this.chatService.updateUsers().subscribe((userList) => this.users = userList)
     )
-    this.chatService.noticeNewUser(this.username);
     this.ping();
   }
 
@@ -70,6 +69,7 @@ export class ChatComponent implements OnInit {
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     clearInterval(this.timerInterval);
+    this.chatService.disconnect();
   }
 
 

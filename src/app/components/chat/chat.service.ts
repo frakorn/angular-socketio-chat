@@ -16,11 +16,14 @@ export class ChatService {
         private toastr: ToastrService ) {}
 
     public init(){
-        this.socket = io(this.url)
-        this.socket.on('username-error', (username) => {
-            this.toastr.error('Username already exist', '');
-            this.logout();
-        });
+        if(!this.socket || !this.socket.connected){
+            this.socket = io(this.url)
+            this.socket.on('username-error', (username) => {
+                this.toastr.error('Username already exist', '');
+                this.logout();
+            });
+            this.noticeNewUser(this.username);
+        }
     }
 
     public setUserList(list){
@@ -133,5 +136,11 @@ export class ChatService {
         this.username = '';
         this.socket.disconnect();
         this.router.navigate(['/user'])
+    }
+
+    public disconnect(){
+        this.socket.emit('user-leave', this.username);
+        this.socket.disconnect();
+
     }
 }
