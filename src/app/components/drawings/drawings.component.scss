@@ -37,7 +37,7 @@
   }
   
   .custom-item .custom-item-body {
-    padding: 10px 0;
+    padding: 0;
   }
   
   .max-height{
@@ -82,6 +82,14 @@
     &.visible{
       display:block;
     }
+  }
+
+  .btn-secondary{
+    border:0px;
+  }
+
+  .dropdown-item{
+    cursor:pointer;
   }
 
   .dropdown,.selected-item-ctn{

@@ -11,6 +11,7 @@ export class ChatService {
     private socket;  
     private username;  
     private userList = [];
+    private timerInterval;
 
     constructor(private router: Router,
         private toastr: ToastrService ) {}
@@ -55,9 +56,17 @@ export class ChatService {
         this.socket.emit('new-message', message);
     }
 
-    public ping() {
-        console.log('user ping')
+    public ping(component) {
+        console.log('user ping from '+component)
         this.socket.emit('ping-user', this.username);
+    }
+
+    public startPing(component){
+        this.timerInterval = setInterval(() => this.ping(component),5000);
+    }
+
+    public destroyPing(){
+        clearInterval(this.timerInterval);
     }
 
     public getMessages = () => {
@@ -72,7 +81,6 @@ export class ChatService {
     public updateUsers = () => {
         return Observable.create((observer) => {
             this.socket.on('update-users', (userListObj) => {
-                console.log('update-users',userListObj.action, userListObj.username)
                 this.notifyChat(userListObj)
                 this.userList = userListObj.userList;
                 observer.next(this.userList);

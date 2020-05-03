@@ -1,19 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat/chat.service';
 import { Router } from '@angular/router';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import 'fabric';
 declare const fabric: any;
 
 @Component({
   selector: 'app-drawings',
   templateUrl: './drawings.component.html',
-  styleUrls: ['./drawings.component.scss']
+  styleUrls: ['./drawings.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('void', style({
+        opacity: 0
+      })),
+      transition(':enter', animate(500)),
+    ])
+  ]
 })
 export class DrawingsComponent implements OnInit {
   subscriptions = []
   private canvas: any;
   toggleEnable: string;
-  timerInterval: any;
   props: any = {
     canvasFill: '#ffffff',
     canvasImage: '',
@@ -109,11 +117,7 @@ export class DrawingsComponent implements OnInit {
     });
     this.canvas.setWidth(this.size.width);
     this.canvas.setHeight(this.size.height);
-    this.ping();
-  }
-
-  ping(){
-    this.timerInterval = setInterval(() => this.chatService.ping(),5000);
+    this.chatService.startPing('drawings component');
   }
 
   back(){
@@ -402,6 +406,7 @@ export class DrawingsComponent implements OnInit {
   }
 
   setFill($event?) {
+    debugger
     this.setActiveStyle('fill', $event.color.hex, null);
   }
 
@@ -587,7 +592,7 @@ export class DrawingsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    clearInterval(this.timerInterval);
+    this.chatService.destroyPing();
   }
 
 }

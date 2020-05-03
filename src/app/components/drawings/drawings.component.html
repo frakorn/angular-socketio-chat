@@ -1,4 +1,4 @@
-<div class="draw-container">
+<div class="draw-container" [@fadeInOut]>
     <div class="row">
         <div class="col-xl-12">
             <div class="btn-ctn">
@@ -10,11 +10,11 @@
                         </button>
                         <div [ngClass]="{'visible':props.menu}" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" (click)="back()">Back</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" >Another action</a>
+                            <a class="dropdown-item">Something else here</a>
                         </div>
                     </div>
-                    <span class="selected-item-ctn" *ngIf="selected">
+                    <span  [@fadeInOut] class="selected-item-ctn" *ngIf="selected">
                         <button title="bring to front" type="button" class="btn btn-secondary" (click)="bringToFront()">
                             <i class="fa fa-arrow-up"></i>
                         </button>
@@ -54,18 +54,7 @@
                 <canvas id="canvas"></canvas>
             </div>
             <div class="right-panel">
-                <!--<div *ngIf="!selected">
-                    <div>
-                        <div class="custom-item" *ngIf="!props.canvasImage">
-                            <div class="custom-item-title">Background Color</div>
-                            <div class="custom-item-body">
-                                <color-sketch color="props.canvasFill" (onChangeComplete)="setCanvasFill($event)"></color-sketch>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-                <div  class="custom-item" *ngIf="selected && textEditor || selected && figureEditor">
-                        <!--<div class="custom-item-title">Background item colo</div>-->
+                <div [@fadeInOut] class="custom-item" *ngIf="selected && textEditor || selected && figureEditor">
                         <div class="custom-item-body">
                             <color-sketch color="props.fill" (onChangeComplete)="setFill($event)"></color-sketch>
                         </div>

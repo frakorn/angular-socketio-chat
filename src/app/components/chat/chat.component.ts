@@ -23,7 +23,6 @@ export class ChatComponent implements OnInit {
   users = this.chatService.getUserList();
   message: string;
   username: string;
-  timerInterval: any;
 
   constructor(private chatService: ChatService, 
     private router: Router ) { }
@@ -41,11 +40,7 @@ export class ChatComponent implements OnInit {
         this.scrollWindow();
       }))
     this.username = this.chatService.getUsername();
-    this.ping();
-  }
-
-  ping(){
-    this.timerInterval = setInterval(() => this.chatService.ping(),5000);
+    this.chatService.startPing('chat component');
   }
 
   scrollWindow(){
@@ -71,7 +66,8 @@ export class ChatComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    clearInterval(this.timerInterval);
+    this.chatService.destroyPing();
+    
   }
 
 
