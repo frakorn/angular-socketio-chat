@@ -20,7 +20,7 @@ declare const fabric: any;
 })
 export class DrawingsComponent implements OnInit {
   subscriptions = []
-  private canvas: any;
+  canvas: any;
   toggleEnable: string;
   props: any = {
     canvasFill: '#ffffff',
@@ -50,6 +50,7 @@ export class DrawingsComponent implements OnInit {
   json: any;
   private globalEditor: boolean = false;
   textEditor: boolean = false;
+  pathEditor: boolean = false;
   private imageEditor: boolean = false;
   figureEditor: boolean = false;
   selected: any;
@@ -104,6 +105,9 @@ export class DrawingsComponent implements OnInit {
               this.getTextAlign();
               this.getFontFamily();
               break;
+            case 'path':
+              this.pathEditor = true;
+              break;              
             case 'image':
               console.log('image');
               break;
@@ -115,9 +119,15 @@ export class DrawingsComponent implements OnInit {
         this.resetPanels();
       }
     });
+    this.initCanvas();
+    this.chatService.startPing('drawings component');
+  }
+
+  initCanvas(){
     this.canvas.setWidth(this.size.width);
     this.canvas.setHeight(this.size.height);
-    this.chatService.startPing('drawings component');
+    this.canvas.selection = false;
+    this.canvas.freeDrawingBrush.width=5;
   }
 
   back(){
@@ -348,6 +358,17 @@ export class DrawingsComponent implements OnInit {
     this.canvas.renderAll();
   }
 
+  setLineWidth(value){
+    let activeObject = this.canvas.getActiveObject();
+    if(activeObject){
+      activeObject.set('strokeWidth', value);
+      this.canvas.renderAll();
+    }
+    else{
+      this.canvas.freeDrawingBrush.width=value;
+    }
+  }
+
   clone() {
     let activeObject = this.canvas.getActiveObject(),
       activeGroup = this.canvas.getActiveObjects();
@@ -406,7 +427,6 @@ export class DrawingsComponent implements OnInit {
   }
 
   setFill($event?) {
-    debugger
     this.setActiveStyle('fill', $event.color.hex, null);
   }
 

@@ -46,7 +46,7 @@
                 <button type="button" class="btn btn-secondary" title="add Text" (click)="addText()">
                     <i class="fa fa-font"></i>
                 </button>
-                <button type="button" class="btn btn-secondary" title="add Free Draw" (click)="addFreeDraw()">
+                <button type="button" [ngClass]="{'active':canvas.isDrawingMode}" class="btn btn-secondary" title="add Free Draw" (click)="addFreeDraw()">
                     <i class="fa fa-paint-brush"></i>
                 </button>
             </div>
@@ -58,7 +58,15 @@
                         <div class="custom-item-body">
                             <color-sketch color="props.fill" (onChangeComplete)="setFill($event)"></color-sketch>
                         </div>
+                </div>
+                <div [@fadeInOut] class="custom-item free-draw" *ngIf="canvas.isDrawingMode || (selected && pathEditor)">
+                    <div class="custom-item-body">
+                       Line Width <br>
+                       <button (click)="setLineWidth(5)"><i class="fa fa-circle fa-xs"></i></button>
+                       <button (click)="setLineWidth(15)"><i class="fa fa-circle fa-sm"></i></button>
+                       <button (click)="setLineWidth(30)"><i class="fa fa-circle fa-lg"></i></button>
                     </div>
+            </div>                
             </div>
         </div>
     </div>

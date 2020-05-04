@@ -39,6 +39,15 @@
   .custom-item .custom-item-body {
     padding: 0;
   }
+
+  .custom-item.free-draw {
+    background-color: white;
+    text-align: center;
+    border-radius: 5px;
+    .fa-xs{
+      font-size:5px;
+    }
+  }
   
   .max-height{
     overflow: auto;
