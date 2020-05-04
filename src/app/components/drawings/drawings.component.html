@@ -61,10 +61,13 @@
                 </div>
                 <div [@fadeInOut] class="custom-item free-draw" *ngIf="canvas.isDrawingMode || (selected && pathEditor)">
                     <div class="custom-item-body">
-                       Line Width <br>
+                       Line Width<br>
                        <button (click)="setLineWidth(5)"><i class="fa fa-circle fa-xs"></i></button>
+                       <button (click)="setLineWidth(10)"><i class="fa fa-circle fa-s"></i></button>
                        <button (click)="setLineWidth(15)"><i class="fa fa-circle fa-sm"></i></button>
                        <button (click)="setLineWidth(30)"><i class="fa fa-circle fa-lg"></i></button>
+                       <br>Line Color<br>
+                       <color-sketch color="canvas.freeDrawingBrush.color" (onChangeComplete)="setLineColor($event)"></color-sketch>
                     </div>
             </div>                
             </div>

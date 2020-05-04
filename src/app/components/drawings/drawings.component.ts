@@ -128,6 +128,7 @@ export class DrawingsComponent implements OnInit {
     this.canvas.setHeight(this.size.height);
     this.canvas.selection = false;
     this.canvas.freeDrawingBrush.width=5;
+    this.canvas.freeDrawingBrush.color='#000000';
   }
 
   back(){
@@ -366,6 +367,18 @@ export class DrawingsComponent implements OnInit {
     }
     else{
       this.canvas.freeDrawingBrush.width=value;
+    }
+  }
+
+  setLineColor($event){
+    let activeObject = this.canvas.getActiveObject();
+    const color = $event.color.hex
+    if(activeObject){
+      activeObject.set('stroke', color);
+      this.canvas.renderAll();
+    }
+    else{
+      this.canvas.freeDrawingBrush.color=color;
     }
   }
 
