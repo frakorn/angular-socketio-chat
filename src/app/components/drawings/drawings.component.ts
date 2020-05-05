@@ -60,7 +60,7 @@ export class DrawingsComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.chatService.getUsername();
-    this.chatService.createDraw(this.createDraw,this);
+    this.chatService.createDraw(this.createDraw);
     this.chatService.removeDraw(this.removeSelected,this);
     this.chatService.updateDraw(this.updateDraw,this)
     this.toggleEnable = 'Enable'
@@ -159,7 +159,7 @@ export class DrawingsComponent implements OnInit {
     this.chatService.notifyUpdateDraw(obj);
   }
 
-  updateDraw(e) {
+  updateDraw = (e) => {
     let obj = this.getObjectById(e.draw.id)
     if (obj) {
       Object.assign(obj, e.draw)
@@ -167,16 +167,16 @@ export class DrawingsComponent implements OnInit {
     }
   }
 
-  createDraw(e,that) {
-    let check = that.getObjectById(e.draw.target.id)
+  createDraw = (e) => {
+    let check = this.getObjectById(e.draw.target.id)
     if (!check) {
-      let add = e.type === 'rect' ? that.createRect(e) :
-        e.type === 'triangle' ? that.createTriangle(e) :
-          e.type === 'circle' ? that.createCircle(e) :
-            e.type === 'i-text' ? that.createText(e) :
-              e.type === 'path' ? that.createPath(e) : false;
-              that.extend(add, e.draw.target.id);
-              that.canvas.add(add);
+      let add = e.type === 'rect' ? this.createRect(e) :
+        e.type === 'triangle' ? this.createTriangle(e) :
+          e.type === 'circle' ? this.createCircle(e) :
+            e.type === 'i-text' ? this.createText(e) :
+              e.type === 'path' ? this.createPath(e) : false;
+              this.extend(add, e.draw.target.id);
+              this.canvas.add(add);
     }
   }
 
@@ -521,7 +521,7 @@ export class DrawingsComponent implements OnInit {
     this.setActiveProp('fontFamily', this.props.fontFamily);
   }
 
-  removeSelected(obj?) {
+  removeSelected = (obj?) => {
     let activeObject = obj || this.canvas.getActiveObject();
     let activeGroup = this.canvas.getActiveObjects();
 

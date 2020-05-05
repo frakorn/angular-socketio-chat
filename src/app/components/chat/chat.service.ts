@@ -8,45 +8,45 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable()
 export class ChatService {
     private url = `${environment.protocol}://${environment.serverIp}:${environment.port}`
-    private socket;  
-    private username;  
+    private socket;
+    private username;
     private userList = [];
     private timerInterval;
 
     constructor(private router: Router,
-        private toastr: ToastrService ) {}
+        private toastr: ToastrService) { }
 
-    public init(){
-            this.socket = io(this.url)
-            this.socket.on('username-error', (username) => {
-                this.toastr.error('Username already exist', '');
-                this.logout();
-            });
-            this.noticeNewUser(this.username);
+    public init() {
+        this.socket = io(this.url)
+        this.socket.on('username-error', (username) => {
+            this.toastr.error('Username already exist', '');
+            this.logout();
+        });
+        this.noticeNewUser(this.username);
     }
 
-    public isConnected(){
+    public isConnected() {
         return this.socket && this.socket.connected;
     }
 
-    public setUserList(list){
+    public setUserList(list) {
         this.userList = list;
     }
 
-    public getUserList(){
+    public getUserList() {
         return this.userList;
     }
 
-    public noticeNewUser(user){
+    public noticeNewUser(user) {
         this.socket.emit('new-user', user);
     }
 
-    public setUsername(username){
+    public setUsername(username) {
         this.username = username;
     }
 
-    public getUsername(){
-        if(!this.username)
+    public getUsername() {
+        if (!this.username)
             this.router.navigate(['/user'])
         else
             return this.username;
@@ -57,15 +57,15 @@ export class ChatService {
     }
 
     public ping(component) {
-        console.log('user ping from '+component)
+        console.log('user ping from ' + component)
         this.socket.emit('ping-user', this.username);
     }
 
-    public startPing(component){
-        this.timerInterval = setInterval(() => this.ping(component),5000);
+    public startPing(component) {
+        this.timerInterval = setInterval(() => this.ping(component), 5000);
     }
 
-    public destroyPing(){
+    public destroyPing() {
         clearInterval(this.timerInterval);
     }
 
@@ -78,54 +78,64 @@ export class ChatService {
         });
     }
 
+    private moveMyUsertoFront(userList){
+        userList.forEach((item, i) => {
+            if (item.username === this.username) {
+                userList.splice(i, 1);
+                userList.unshift(item);
+            }
+        })
+        return userList;
+    }
+
     public updateUsers = () => {
         return Observable.create((observer) => {
             this.socket.on('update-users', (userListObj) => {
                 this.notifyChat(userListObj)
-                this.userList = userListObj.userList;
+                this.userList = this.moveMyUsertoFront(userListObj.userList);
                 observer.next(this.userList);
             });
         });
-    }  
+    }
 
-    public updateDraw = (foo,that) => {
-            this.socket.on('update-draw', (drawObj) => {
-                console.log('update-draw',drawObj.username)
-                if(drawObj.username!==this.username){
-                    that.updateDraw(drawObj);
-                }
-            });
-    } 
-    
-    public createDraw = (foo,that) => {
-        this.socket.on('create-draw', (drawObj) => {
-            console.log('create-draw',drawObj.username)
-            if(drawObj.username!==this.username)
-                foo(drawObj,that);
+    public updateDraw = (foo, that) => {
+        this.socket.on('update-draw', (drawObj) => {
+            console.log('update-draw', drawObj.username)
+            if (drawObj.username !== this.username) {
+                that.updateDraw(drawObj);
+            }
         });
     }
-    
-    public removeDraw = (foo,that) => {
-            this.socket.on('remove-draw', (drawObj) => {
-                console.log('remove-draw',drawObj)
-                if(drawObj.username!==this.username){
-                    let obj = that.getObjectById(drawObj.draw.id);
-                    that.removeSelected(obj);
-                }
-            });
-    }      
-    
-    public notifyCreateDraw = (obj,type) => {
-        this.socket.emit('create-draw', { 'username': this.username, 'draw': obj, 'type':type});
-    } 
-    
+
+    public createDraw = (foo) => {
+        this.socket.on('create-draw', (drawObj) => {
+            console.log('create-draw', drawObj.username)
+            if (drawObj.username !== this.username)
+                foo(drawObj);
+        });
+    }
+
+    public removeDraw = (foo, that) => {
+        this.socket.on('remove-draw', (drawObj) => {
+            console.log('remove-draw', drawObj)
+            if (drawObj.username !== this.username) {
+                let obj = that.getObjectById(drawObj.draw.id);
+                foo(obj);
+            }
+        });
+    }
+
+    public notifyCreateDraw = (obj, type) => {
+        this.socket.emit('create-draw', { 'username': this.username, 'draw': obj, 'type': type });
+    }
+
     public notifyRemoveDraw = (obj) => {
-        this.socket.emit('remove-draw', { 'username': this.username, 'draw': obj});
-    }   
+        this.socket.emit('remove-draw', { 'username': this.username, 'draw': obj });
+    }
 
     public notifyUpdateDraw = (obj) => {
-        this.socket.emit('update-draw', { 'username': this.username, 'draw': obj});
-    } 
+        this.socket.emit('update-draw', { 'username': this.username, 'draw': obj });
+    }
 
     private notifyChat(userListObj) {
         if (userListObj.username !== this.username) {
@@ -136,18 +146,18 @@ export class ChatService {
         }
     }
 
-    public broadcastDraw(draw){
-        this.socket.emit('update-draw', { 'username': this.username, 'draw': draw});
+    public broadcastDraw(draw) {
+        this.socket.emit('update-draw', { 'username': this.username, 'draw': draw });
     }
 
-    public logout(){
+    public logout() {
         this.socket.emit('user-leave', this.username);
         this.username = '';
         this.socket.disconnect();
         this.router.navigate(['/user'])
     }
 
-    public disconnect(){
+    public disconnect() {
         this.socket.emit('user-leave', this.username);
     }
 }
